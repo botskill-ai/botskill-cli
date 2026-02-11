@@ -16,10 +16,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
@@ -33,6 +33,14 @@ jobs:
       - name: Install dependencies
         run: npm run install
 
+      - name: Generate changelog
+        run: |
+          npx conventional-changelog -p angular -i CHANGELOG.md -s -r 0 || true
+          if [ ! -s release_notes.md ]; then
+            echo "## Changes" > release_notes.md
+            echo "See commit history for details." >> release_notes.md
+          fi
+
       - name: Run release script
         run: npm run release
         env:
@@ -40,3 +48,17 @@ jobs:
           DRY_RUN: ${{ github.event_name == 'pull_request' }}
           BOTSKILL_API_URL: ${{ secrets.BOTSKILL_API_URL }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      
+      - name: Create release
+        uses: peter-evans/create-release@v2
+        with:
+          tag_name: ${{ env.VERSION }}
+          release_name: ${{ env.VERSION }}
+          release_body: ${{ steps.generate-changelog.outputs.release_notes }}
+          release_notes: ${{ steps.generate-changelog.outputs.release_notes }}
+          release_notes_path: release_notes.md
+          release_notes_file: release_notes.md
+          release_notes_file_path: release_notes.md
+          release_notes_file_path: release_notes.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
