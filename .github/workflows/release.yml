@@ -50,7 +50,7 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       
       - name: Create release
-        uses: peter-evans/create-release@v2
+        uses: softprops/create-release@v2
         with:
           tag_name: ${{ env.VERSION }}
           release_name: ${{ env.VERSION }}
