@@ -1,0 +1,42 @@
+name: Publish to npm
+
+on:
+  push:
+    branches:
+      - release
+      - release-v?*
+      - release/*
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Get version from package.json
+        id: get-version
+        run: |
+          VERSION=$(jq -r '.version' package.json)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Install dependencies
+        run: npm run install
+
+      - name: Run release script
+        run: npm run release
+        env:
+          VERSION: ${{ env.VERSION }}
+          DRY_RUN: ${{ github.event_name == 'pull_request' }}
+          BOTSKILL_API_URL: ${{ secrets.BOTSKILL_API_URL }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
