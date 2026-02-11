@@ -54,11 +54,8 @@ jobs:
         with:
           tag_name: ${{ env.VERSION }}
           release_name: ${{ env.VERSION }}
-          release_body: ${{ steps.generate-changelog.outputs.release_notes }}
-          release_notes: ${{ steps.generate-changelog.outputs.release_notes }}
-          release_notes_path: release_notes.md
+          generate_release_notes: true
           release_notes_file: release_notes.md
-          release_notes_file_path: release_notes.md
           release_notes_file_path: release_notes.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
