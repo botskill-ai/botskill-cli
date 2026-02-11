@@ -1,0 +1,54 @@
+{
+  "name": "@botskill/cli",
+  "version": "1.0.10",
+  "description": "CLI tool for BotSkill - AI agent skills platform",
+  "main": "src/index.js",
+  "bin": {
+    "skm": "src/index.js"
+  },
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node src/index.js",
+    "build": "node scripts/build.js",
+    "build:restore": "node scripts/build.js --restore",
+    "prepublishOnly": "npm run build",
+    "postpublish": "npm run build:restore",
+    "release": "node scripts/release.js patch",
+    "release:patch": "node scripts/release.js patch",
+    "release:minor": "node scripts/release.js minor",
+    "release:major": "node scripts/release.js major",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "node scripts/postinstall.js"
+  },
+  "files": [
+    "src",
+    "scripts"
+  ],
+  "keywords": [
+    "cli",
+    "ai",
+    "skills",
+    "agents",
+    "management",
+    "tool"
+  ],
+  "author": "BotSkill Team",
+  "license": "MIT",
+  "dependencies": {
+    "adm-zip": "^0.5.16",
+    "axios": "^1.6.0",
+    "commander": "^11.0.0",
+    "configstore": "^6.0.0",
+    "form-data": "^4.0.5",
+    "fs-extra": "^11.1.1",
+    "inquirer": "^9.2.0",
+    "tar": "^6.2.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
